@@ -4,7 +4,7 @@
 # key25519
 
 
-| English | [中文](README.zh.md) |
+| English | [中文](README_zh.md) |
 | ------- | -------------------- |
 
 `key25519` is a cryptographic library written in Go that implements a variety of cryptographic functions based on Ed25519, including BIP32 hierarchical deterministic wallets, BIP39 mnemonic generation, BIP44 multi-account wallet structures, and ECDH key exchange protocols based on Curve25519.
