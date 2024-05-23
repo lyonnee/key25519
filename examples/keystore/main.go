@@ -17,13 +17,15 @@ func main() {
 
 	// 导出keypair1的keystore
 	filename := "./" + format.EncodeBase58(kp.PublicKey().Bytes()) + ".keystore"
-	err := kp.ExportKeystore(filename, "")
+	password := "kaixin"
+
+	err := kp.ExportKeystore(filename, password)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	// 导入keypair1的keystore 生成keypair2
-	key, err := key25519.LoadPrivKeyFromKeystore(filename, "")
+	key, err := key25519.LoadPrivKeyFromKeystore(filename, password)
 	if err != nil {
 		log.Fatalln(err)
 	}
