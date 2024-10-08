@@ -30,8 +30,8 @@ go get github.com/lyonnee/key25519
 ### ECDH 密钥交换
 
 ```go
-kp1 := key25519.NewKeypair()
-kp2 := key25519.NewKeypair()
+kp1 := key25519.NewKeyPair()
+kp2 := key25519.NewKeyPair()
 
 kp1EcdhPubKey, _ := kp1.ExportEcdhPubKey()
 kp2EcdhPubKey, _ := kp2.ExportEcdhPubKey()
@@ -69,7 +69,7 @@ fmt.Println(format.EncodeBase58(pubk.Bytes())) // 公钥
 ### 密钥库示例
 
 ```go
-kp := key25519.NewKeypair()
+kp := key25519.NewKeyPair()
 originMsg := []byte("i am lyon")
 signedMsg := kp.PrivateKey().SignMsg(originMsg)
 
@@ -79,8 +79,7 @@ password := "kaixin"
 err := kp.ExportKeystore(filename, password)
 // ...
 
-key, _ := key25519.LoadPrivKeyFromKeystore(filename, password)
-kp2, _ := key25519.NewKeypairFromPrivKeyBytes(key)
+kp2, _ := key25519.NewKeyPairFromKeystore(filename, password)
 
 res := key25519.VerifyMsg(kp2.PublicKey(), originMsg, signedMsg)
  // 验证签名结果

@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// build random keypair
-	kp := key25519.NewKeypair()
+	kp := key25519.NewKeyPair()
 
 	oriMsg := []byte("i am lyon")
 

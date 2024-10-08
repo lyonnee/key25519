@@ -9,21 +9,21 @@ import (
 )
 
 func main() {
-	kp1 := key25519.NewKeypair()
-	kp2 := key25519.NewKeypair()
+	kp1 := key25519.NewKeyPair()
+	kp2 := key25519.NewKeyPair()
 
-	kp1EcdhPubKey, err := kp1.ExportEcdhPubKey()
+	x25519kp1, err := kp1.ExportEcdhKeyPair()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	kp2EcdhPubKey, err := kp2.ExportEcdhPubKey()
+	x25519kp2, err := kp2.ExportEcdhKeyPair()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	sk1, _ := kp1.Ecdh(kp2EcdhPubKey)
-	sk2, _ := kp2.Ecdh(kp1EcdhPubKey)
+	sk1, _ := kp1.ECDH(x25519kp2.PublicKey)
+	sk2, _ := kp2.ECDH(x25519kp1.PublicKey)
 
 	fmt.Println(format.EncodeBase58(sk1))
 	fmt.Println(format.EncodeBase58(sk2))

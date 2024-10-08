@@ -1,4 +1,4 @@
-package key25519
+package keystore
 
 import (
 	"encoding/json"

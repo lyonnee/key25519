@@ -1,67 +1,66 @@
 package key25519
 
-type Keypair struct {
+import "github.com/lyonnee/key25519/keystore"
+
+type KeyPair struct {
 	privKey PrivateKey
 	pubKey  PublicKey
 }
 
-func NewKeypairFromPrivKeyBytes(key []byte) (*Keypair, error) {
+func NewKeyPair() *KeyPair {
+	privKey := NewPrivateKey(nil)
+
+	return &KeyPair{
+		privKey: privKey,
+		pubKey:  privKey.GetPubKey(),
+	}
+}
+
+func NewKeyPairWithSeed(seed []byte) *KeyPair {
+	privKey := NewPrivateKey(seed)
+
+	return &KeyPair{
+		privKey: privKey,
+		pubKey:  privKey.GetPubKey(),
+	}
+}
+
+func NewKeyPairFromPrivKeyBytes(key []byte) (*KeyPair, error) {
 	privKey, err := bytesToPrivKey(key)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Keypair{
+	return &KeyPair{
 		privKey: privKey,
 		pubKey:  privKey.GetPubKey(),
 	}, nil
 }
 
-func NewKeypair() *Keypair {
-	privKey := NewPrivateKey(nil)
-
-	return &Keypair{
-		privKey: privKey,
-		pubKey:  privKey.GetPubKey(),
+// 加载keystore文件还原KeyPair
+func NewKeyPairFromKeystore(filepath, password string) (*KeyPair, error) {
+	privKey, err := keystore.LoadPrivKeyFromKeystore(filepath, password)
+	if err != nil {
+		return nil, err
 	}
+
+	return NewKeyPairFromPrivKeyBytes(privKey)
 }
 
-func NewKeypairWithSeed(seed []byte) *Keypair {
-	privKey := NewPrivateKey(seed)
-
-	return &Keypair{
-		privKey: privKey,
-		pubKey:  privKey.GetPubKey(),
-	}
-}
-
-func (kp *Keypair) PrivateKey() PrivateKey {
+func (kp *KeyPair) PrivateKey() PrivateKey {
 	return kp.privKey
 }
 
-func (kp *Keypair) PublicKey() PublicKey {
+func (kp *KeyPair) PublicKey() PublicKey {
 	return kp.pubKey
 }
 
-func (kp *Keypair) LoadFromPrivKey(privKey PrivateKey) {
+func (kp *KeyPair) LoadFromPrivKey(privKey PrivateKey) {
 	kp.privKey = privKey
 	kp.pubKey = privKey.GetPubKey()
 }
 
 // 导出keystore文件
-func (kp *Keypair) ExportKeystore(filepath, password string) error {
-	return SaveAsKeystore(kp.PrivateKey().Bytes(), filepath, password, false)
-}
-
-func (kp *Keypair) ExportEcdhPubKey() ([]byte, error) {
-	ecdhKp, err := ExportEcdhKeypair(kp.privKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return ecdhKp.PublicKey, nil
-}
-
-func (kp *Keypair) Ecdh(peerPubKey []byte) ([]byte, error) {
-	return Ecdh(kp.privKey, peerPubKey)
+func (kp *KeyPair) ExportKeystore(filepath, password string) error {
+	return keystore.SaveAsKeystore(kp.PrivateKey().Bytes(), filepath, password, false)
 }

@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// 生成keypair1
-	kp := key25519.NewKeypair()
+	kp := key25519.NewKeyPair()
 
 	originMsg := []byte("i am lyon")
 	signedMsg := kp.PrivateKey().SignMsg(originMsg)
@@ -25,12 +25,7 @@ func main() {
 	}
 
 	// 导入keypair1的keystore 生成keypair2
-	key, err := key25519.LoadPrivKeyFromKeystore(filename, password)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	kp2, err := key25519.NewKeypairFromPrivKeyBytes(key)
+	kp2, err := key25519.NewKeyPairFromKeystore(filename, password)
 	if err != nil {
 		log.Fatalln(err)
 	}
